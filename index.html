@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- model-viewer: free, open-source, no watermarks -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
   <style>
     body {
       font-family: 'Noto Sans', sans-serif;
@@ -62,6 +65,82 @@
     .contrib-box p { margin-bottom: 0.55rem; line-height: 1.7; }
     .contrib-box p:last-child { margin-bottom: 0; }
     .contrib-box strong { color: #1a7fbd; }
+
+    /* ── 3D VIEWER SECTION ── */
+    .viewer-section {
+      background: #f0f5fa;
+      padding: 3rem 0;
+    }
+    .viewer-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+      background: #0d1b2a;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    model-viewer {
+      width: 100%;
+      height: 480px;
+      background: linear-gradient(160deg, #0d1b2a 0%, #112233 60%, #0a2a3a 100%);
+      --poster-color: transparent;
+    }
+    /* Remove any default model-viewer branding */
+    model-viewer::part(default-ar-button) { display: none; }
+
+    .viewer-badge {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .viewer-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #4dd0e1;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+
+    .viewer-hint {
+      position: absolute;
+      bottom: 14px;
+      right: 16px;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.73rem;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      pointer-events: none;
+    }
+
+    .viewer-caption {
+      font-size: 0.875rem;
+      color: #555;
+      margin-top: 1rem;
+      line-height: 1.55;
+      text-align: center;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .viewer-caption b { color: #333; }
 
     /* ── METHOD CARDS ── */
     .method-card {
@@ -170,19 +249,6 @@
     }
     .copy-btn:hover { background: #eee; }
 
-    /* ── VIDEO PLACEHOLDERS ── */
-    .video-placeholder {
-      background: #f0f0f0;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 6px;
-      color: #aaa; font-size: 0.78rem;
-      font-family: 'Google Sans', sans-serif;
-      aspect-ratio: 16/9;
-      border: 1px dashed #ccc;
-    }
-    .video-placeholder .fa-play-circle { font-size: 1.8rem; color: #ccc; }
-
     /* ── DIVIDER ── */
     hr.section-hr { border: none; border-top: 1px solid #ececec; margin: 0; }
 
@@ -193,29 +259,6 @@
   </style>
 </head>
 <body>
-
-<!-- ── NAVBAR ── -->
-<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow:1; justify-content:center;">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">More Research</a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://holoocean.readthedocs.io/" target="_blank">HoloOcean</a>
-          <a class="navbar-item" href="https://www.mosaic-expedition.org/" target="_blank">MOSAiC Expedition</a>
-          <a class="navbar-item" href="https://depth-anything-v3.github.io/" target="_blank">Depth Anything V3</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav> -->
 
 <!-- ── PAPER HEADER ── -->
 <section class="hero">
@@ -250,7 +293,7 @@
           <div style="margin-bottom:1.4rem;">
             <span class="tag is-info is-light is-medium" style="font-family:'Google Sans',sans-serif; font-weight:500;">
               <a href="https://sites.google.com/view/icra-2026-s2s-perception/" target="_blank" style="text-decoration:none; color:inherit;">
-                Acccepted at IEEE ICRA 2026 · S2S Workshop
+                Accepted at IEEE ICRA 2026 · S2S Workshop
               </a>
             </span>
           </div>
@@ -282,59 +325,6 @@
   </div>
 </section>
 
-<!-- ── TEASER ── -->
-<!-- <section class="hero teaser" style="background:#fafafa; padding:2rem 0 0;">
-  <div class="container is-max-desktop">
-    <div class="hero-body" style="padding-bottom:0.75rem;">
-      <figure>
-        <img src="./static/images/area1.png" alt="Cross-modal alignment teaser" class="figure-img">
-      </figure>
-      <p class="figure-caption" style="font-size:0.95rem; margin-top:1rem;">
-        Cross-modal alignment between upward-looking multibeam sonar geometry and optical imagery from the MOSAiC expedition.
-        Our benchmark enables quantitative comparison of SfM and monocular depth estimation against acoustic ground truth.
-      </p>
-    </div>
-  </div>
-</section> -->
-
-<!-- ── VIDEO CAROUSEL (placeholder) ── -->
-<!-- <section class="hero is-light is-small" style="margin-top:1.5rem;">
-  <div class="hero-body">
-    <div class="container">
-      <div class="columns is-multiline is-centered">
-        <div class="column is-3">
-          <div class="video-placeholder">
-            <i class="fas fa-play-circle"></i>
-            <span>Under-ice survey</span>
-            <span style="font-size:0.68rem; color:#bbb;">coming soon</span>
-          </div>
-        </div>
-        <div class="column is-3">
-          <div class="video-placeholder">
-            <i class="fas fa-play-circle"></i>
-            <span>SfM reconstruction</span>
-            <span style="font-size:0.68rem; color:#bbb;">coming soon</span>
-          </div>
-        </div>
-        <div class="column is-3">
-          <div class="video-placeholder">
-            <i class="fas fa-play-circle"></i>
-            <span>DA3 depth maps</span>
-            <span style="font-size:0.68rem; color:#bbb;">coming soon</span>
-          </div>
-        </div>
-        <div class="column is-3">
-          <div class="video-placeholder">
-            <i class="fas fa-play-circle"></i>
-            <span>HoloOcean sim</span>
-            <span style="font-size:0.68rem; color:#bbb;">coming soon</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
-
 <hr class="section-hr">
 
 <!-- ── ABSTRACT ── -->
@@ -355,6 +345,57 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<hr class="section-hr">
+
+<!-- ── 3D VIEWER TEASER ── -->
+<section class="viewer-section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered" style="margin-bottom:1.5rem;">3D Reconstruction</h2>
+    <div class="viewer-wrapper">
+
+      <!-- 
+        ============================================================
+        SWAP IN YOUR GLB FILE HERE
+        Replace  src="./static/models/your-model.glb"
+        with the actual path to your .glb file.
+        If it's on a server, you can also use a full URL.
+        ============================================================
+      -->
+      <model-viewer
+        src="./static/models/your-model.glb"
+        alt="Under-ice 3D reconstruction from the MOSAiC expedition"
+        auto-rotate
+        auto-rotate-delay="500"
+        rotation-per-second="12deg"
+        camera-controls
+        touch-action="pan-y"
+        shadow-intensity="0"
+        exposure="1.1"
+        environment-image="neutral"
+        style="width:100%; height:480px;"
+      ></model-viewer>
+
+      <!-- Live badge overlay -->
+      <div class="viewer-badge">
+        <span class="dot"></span>
+        Interactive 3D Model
+      </div>
+
+      <!-- Hint overlay -->
+      <div class="viewer-hint">
+        <i class="fas fa-mouse" style="font-size:0.7rem;"></i>
+        Drag to orbit · Scroll to zoom
+      </div>
+
+    </div>
+
+    <p class="viewer-caption" style="margin-top:1rem;">
+      <b>Interactive reconstruction</b> — Under-ice geometry from SfM applied to ROV imagery collected during the MOSAiC expedition (survey PS122/3_39-20, May 2020).
+      Drag to orbit, scroll to zoom.
+    </p>
   </div>
 </section>
 
@@ -404,8 +445,6 @@
 
     <div style="margin-top:3rem;">
       <h3 class="title is-4 has-text-centered">DA3 Depth Estimation</h3>
-      
-      <!-- First Image: Wide -->
       <div class="columns is-centered">
         <div class="column is-eight-fifths">
           <figure class="image">
@@ -413,8 +452,6 @@
           </figure>
         </div>
       </div>
-
-      <!-- Second Image: Square -->
       <div class="columns is-centered">
         <div class="column is-half">
           <figure class="image">
@@ -422,11 +459,12 @@
           </figure>
         </div>
       </div>
-
       <p class="has-text-centered" style="margin-top: 1rem;">
         <b>Fig. 2</b> — (Top) Original ice image alongside its DA3 depth map. (Bottom) Example 3D reconstruction from four enhanced images using estimated camera poses.
       </p>
     </div>
+  </div>
+</section>
 
 <hr class="section-hr">
 
@@ -627,11 +665,6 @@
       setTimeout(() => btn.textContent = 'Copy', 2000);
     });
   }
-
-  document.querySelector('.navbar-burger').addEventListener('click', function() {
-    this.classList.toggle('is-active');
-    document.querySelector('.navbar-menu').classList.toggle('is-active');
-  });
 </script>
 </body>
 </html>
